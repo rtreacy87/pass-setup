@@ -238,20 +238,101 @@ What these commands do:
 
 ## Configuring Git to Use Your GPG Key (Optional)
 
-If you plan to use your GPG key for signing Git commits:
+If you plan to use your GPG key for signing Git commits, you'll need to configure Git to use your private key. This allows you to cryptographically sign your commits, proving they came from you.
+
+### Finding Your GPG Key ID
+
+First, you need to identify the correct key ID to use:
+
+```bash
+# List your secret keys and find your key ID
+gpg --list-secret-keys --keyid-format LONG
+```
+
+The output will look something like this:
+```
+sec   rsa4096/3AA5C34371567BD2 2022-03-10 [SC]
+      1234567890ABCDEF1234567890ABCDEF12345678
+uid                 [ultimate] Your Name <your.email@example.com>
+ssb   rsa4096/42B317FD4BA89E7A 2022-03-10 [E]
+```
+
+What to look for:
+- The key ID is the part after `rsa4096/` on the `sec` line (in this example: `3AA5C34371567BD2`)
+- This is your primary private key ID that you'll use for signing
+- Make sure to use the ID from the `sec` line (primary key), not the `ssb` line (subkey)
+
+You can also use this command to extract just the key ID:
+
+```bash
+# Extract the key ID automatically
+KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | cut -d'/' -f2 | cut -d' ' -f1)
+echo "Your key ID is: $KEY_ID"
+```
+
+### Configuring Git
+
+Now configure Git to use your key for signing:
 
 ```bash
 # Configure Git to use your GPG key
 git config --global user.signingkey YOUR_KEY_ID
 git config --global commit.gpgsign true
 
-# Test signing
-echo "test" > test_file
+# If you want to sign tags by default too
+git config --global tag.gpgsign true
+```
+
+Replace `YOUR_KEY_ID` with your actual key ID (like `3AA5C34371567BD2`) that you found in the previous step.
+
+What these commands do:
+- `user.signingkey` tells Git which key to use for signatures
+- `commit.gpgsign true` makes Git sign all commits by default
+- `tag.gpgsign true` makes Git sign all tags by default
+
+### Testing Git Signing
+
+To verify that Git signing is working correctly:
+
+```bash
+# Create a test repository
+mkdir -p ~/git-test && cd ~/git-test
+git init
+
+# Configure user information for this test
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+
+# Create a test file and commit it
+echo "This is a test file" > test_file
 git add test_file
 git commit -m "Test GPG signing"
 ```
 
-Replace `YOUR_KEY_ID` with your actual key ID (like `3AA5C34371567BD2`).
+If your key is properly configured, Git will prompt you for your GPG key passphrase during the commit.
+
+### Verifying the Signed Commit
+
+To confirm that your commit was properly signed:
+
+```bash
+# Check the signature on your commit
+git log --show-signature -1
+```
+
+You should see output that includes:
+```
+commit abcdef1234567890... (HEAD -> master)
+gpg: Signature made Wed Apr 27 21:30:00 2023 UTC
+gpg:                using RSA key 3AA5C34371567BD2
+gpg: Good signature from "Your Name <your.email@example.com>" [ultimate]
+Author: Your Name <your.email@example.com>
+Date:   Wed Apr 27 21:30:00 2023
+
+    Test GPG signing
+```
+
+The "Good signature" line confirms that the signing worked correctly.
 
 ## Troubleshooting Common Import Issues
 
