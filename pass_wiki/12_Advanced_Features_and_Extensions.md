@@ -404,7 +404,7 @@ To use the shared store, you can either:
    ```bash
    alias team-pass='PASSWORD_STORE_DIR=~/shared-password-store pass'
    ```
-   
+
    Then use:
    ```bash
    team-pass show Website/example
@@ -434,19 +434,19 @@ pronounceable() {
     local consonants="bcdfghjklmnpqrstvwxyz"
     local vowels="aeiou"
     local password=""
-    
+
     for ((i=0; i<length; i+=2)); do
         if [ $i -lt $length ]; then
             consonant=${consonants:$(( RANDOM % ${#consonants} )):1}
             password="${password}${consonant}"
         fi
-        
+
         if [ $((i+1)) -lt $length ]; then
             vowel=${vowels:$(( RANDOM % ${#vowels} )):1}
             password="${password}${vowel}"
         fi
     done
-    
+
     echo "$password"
 }
 
@@ -490,3 +490,12 @@ These advanced features and extensions significantly enhance the functionality o
 Remember that each extension or customization should be evaluated for its security implications before implementation. Always prioritize the security of your password store over convenience features.
 
 In the next guide, we'll cover troubleshooting common issues that you might encounter when using Pass across multiple systems.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [GUI Clients and Browser Integration](11_GUI_Clients_and_Browser_Integration.md)
+- Next: [Troubleshooting Guide](13_Troubleshooting_Guide.md)
+- Related:
+  - [Security Best Practices](10_Security_Best_Practices.md) - For security considerations
+  - [Maintenance and Administration](15_Maintenance_and_Administration.md) - For long-term management

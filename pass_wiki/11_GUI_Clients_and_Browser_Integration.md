@@ -239,7 +239,7 @@ For Chrome to work with WSL, you need to create a custom native messaging host m
    ```
 
 4. Create a Windows batch script to bridge between Chrome and WSL:
-   
+
    Create a file named `browserpass-wsl.bat` in a location like `C:\Users\YourUsername\bin\` with:
    ```batch
    @echo off
@@ -329,7 +329,7 @@ if [ -n "$ENTRY" ]; then
     # Get username and password
     PASSWORD=$(pass "$ENTRY" | head -n 1)
     USERNAME=$(pass "$ENTRY" | grep -i "username:" | cut -d ' ' -f 2-)
-    
+
     # Type username, tab, password, enter
     osascript -e "tell application \"System Events\" to keystroke \"$USERNAME\""
     osascript -e "tell application \"System Events\" to keystroke tab"
@@ -353,3 +353,12 @@ While Pass is primarily a command-line tool, these GUI clients and browser exten
 For maximum security, stick with the command-line interface and clipboard integration. For convenience, the browser extensions provide a good balance of security and usability.
 
 In the next guide, we'll explore advanced features and extensions to enhance your password management system.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Security Best Practices](10_Security_Best_Practices.md)
+- Next: [Advanced Features and Extensions](12_Advanced_Features_and_Extensions.md)
+- Related:
+  - [Setting Up Pass on WSL Ubuntu](08_Setting_Up_Pass_on_WSL_Ubuntu.md) - For WSL integration
+  - [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md) - For mobile setup

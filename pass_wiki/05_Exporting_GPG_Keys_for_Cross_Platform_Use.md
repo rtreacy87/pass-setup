@@ -183,3 +183,10 @@ You're now ready to import these keys on your Windows WSL Ubuntu system, which w
 Remember that your private key is extremely sensitive. Always handle it with care, use strong encryption when transferring it, and delete any copies once they're no longer needed.
 
 In the next guide, we'll set up WSL Ubuntu on your Windows system in preparation for importing your GPG keys.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Git Integration for Pass](04_Git_Integration_for_Pass.md)
+- Next: [Setting Up WSL Ubuntu for Pass](06_Setting_Up_WSL_Ubuntu_for_Pass.md)
+- Prerequisites: [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md)

@@ -37,10 +37,10 @@ If your key is not listed, it's not properly imported.
    ```bash
    # Decrypt with the old key (if available)
    gpg -d ~/.password-store/path/to/password.gpg > temp_password.txt
-   
+
    # Re-encrypt with your current key
    cat temp_password.txt | gpg -e -r YOUR_KEY_ID > ~/.password-store/path/to/password.gpg
-   
+
    # Securely delete the temporary file
    shred -u temp_password.txt
    ```
@@ -64,12 +64,12 @@ This error occurs when GPG can't find the pinentry program to prompt for your pa
 #### Solutions
 
 1. Install pinentry:
-   
+
    On macOS:
    ```bash
    brew install pinentry-mac
    ```
-   
+
    On WSL Ubuntu:
    ```bash
    sudo apt install -y pinentry-curses
@@ -80,7 +80,7 @@ This error occurs when GPG can't find the pinentry program to prompt for your pa
    echo "pinentry-program /usr/local/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
    # Or for WSL:
    # echo "pinentry-program /usr/bin/pinentry-curses" >> ~/.gnupg/gpg-agent.conf
-   
+
    gpgconf --kill gpg-agent
    ```
 
@@ -123,7 +123,7 @@ ssh -T git@github.com
    ```bash
    ssh-add -l
    ```
-   
+
    If your key is not listed, add it:
    ```bash
    ssh-add ~/.ssh/id_ed25519
@@ -140,9 +140,9 @@ ssh -T git@github.com
    ```bash
    pass git remote -v
    ```
-   
+
    It should use SSH format (`git@github.com:username/repo.git`) not HTTPS format (`https://github.com/username/repo.git`).
-   
+
    To change it:
    ```bash
    pass git remote set-url origin git@github.com:username/repo.git
@@ -157,14 +157,14 @@ This occurs when there are conflicting changes in your local and remote reposito
 For encrypted files, you can't resolve conflicts in the usual way. Instead:
 
 1. Choose which version to keep:
-   
+
    To keep your local version:
    ```bash
    pass git checkout --ours path/to/conflicted/password.gpg
    pass git add path/to/conflicted/password.gpg
    pass git commit -m "Resolve conflict, keep local version"
    ```
-   
+
    To keep the remote version:
    ```bash
    pass git checkout --theirs path/to/conflicted/password.gpg
@@ -176,14 +176,14 @@ For encrypted files, you can't resolve conflicts in the usual way. Instead:
    ```bash
    # Create a temporary branch with your version
    pass git checkout -b my-version
-   
+
    # Go back to the main branch
    pass git checkout master
-   
+
    # Create a temporary branch with their version
    pass git checkout -b their-version
    pass git pull
-   
+
    # Now you can compare the files in both branches
    ```
 
@@ -211,24 +211,24 @@ This error occurs when the `pass` command is not in your PATH.
 #### Solutions
 
 1. Verify Pass is installed:
-   
+
    On macOS:
    ```bash
    brew list pass
    ```
-   
+
    On WSL Ubuntu:
    ```bash
    dpkg -l | grep pass
    ```
 
 2. Find the location of the Pass executable:
-   
+
    On macOS:
    ```bash
    which pass
    ```
-   
+
    On WSL Ubuntu:
    ```bash
    which pass
@@ -290,7 +290,7 @@ This occurs when GPG encryption fails.
    ```bash
    gpg --list-secret-keys --keyid-format LONG
    ```
-   
+
    If it has expired, extend its validity:
    ```bash
    gpg --edit-key YOUR_GPG_KEY_ID
@@ -312,7 +312,7 @@ This occurs when the Windows drives are not properly mounted in WSL.
    ```bash
    ls /mnt/
    ```
-   
+
    You should see your Windows drives (c, d, etc.).
 
 2. If not mounted, try:
@@ -360,7 +360,7 @@ This can occur due to SSH configuration issues in WSL.
    ```bash
    ssh -V
    ```
-   
+
    If not installed:
    ```bash
    sudo apt install -y openssh-client
@@ -525,3 +525,14 @@ Remember that prevention is better than cure:
 If you encounter an issue not covered in this guide, the Pass documentation and community forums are excellent resources for additional help.
 
 In the next guide, we'll cover how to extend your password management system to additional platforms beyond macOS and WSL Ubuntu.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Advanced Features and Extensions](12_Advanced_Features_and_Extensions.md)
+- Next: [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md)
+- Related:
+  - [Git Integration for Pass](04_Git_Integration_for_Pass.md) - For Git-related issues
+  - [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md) - For GPG-related issues
+  - [Synchronization Workflow Between Systems](09_Synchronization_Workflow_Between_Systems.md) - For synchronization issues
+  - [Setting Up WSL Ubuntu for Pass](06_Setting_Up_WSL_Ubuntu_for_Pass.md) - For WSL-specific issues

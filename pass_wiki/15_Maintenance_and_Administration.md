@@ -312,7 +312,7 @@ Document the recovery process:
    gpg -d private-key-backup.asc.gpg > private-key.asc
    gpg -d public-key-backup.asc.gpg > public-key.asc
    gpg -d trust-backup.txt.gpg > trust.txt
-   
+
    # Import the keys
    gpg --import public-key.asc
    gpg --import private-key.asc
@@ -323,7 +323,7 @@ Document the recovery process:
    ```bash
    # Decrypt the password store backup
    gpg -d password-store-backup.tar.gz.gpg > password-store-backup.tar.gz
-   
+
    # Extract the backup
    tar -xzf password-store-backup.tar.gz -C $HOME
    ```
@@ -332,7 +332,7 @@ Document the recovery process:
    ```bash
    # List passwords
    pass
-   
+
    # Try accessing a password
    pass show Email/example
    ```
@@ -557,3 +557,12 @@ Key takeaways:
 - Conduct regular audits to ensure security and compliance
 
 With these practices in place, your cross-platform password management system will remain a secure and effective tool for managing your digital credentials across all your devices and platforms.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md)
+- Related:
+  - [Security Best Practices](10_Security_Best_Practices.md) - For security considerations
+  - [Advanced Features and Extensions](12_Advanced_Features_and_Extensions.md) - For backup and extension details
+  - [Troubleshooting Guide](13_Troubleshooting_Guide.md) - For help with maintenance issues

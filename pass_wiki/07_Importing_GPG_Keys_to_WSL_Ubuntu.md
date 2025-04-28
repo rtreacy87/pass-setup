@@ -247,3 +247,12 @@ Congratulations! You've successfully:
 Your GPG keys are now set up on your WSL Ubuntu system, and you're ready to configure Pass to use these keys. In the next guide, we'll set up Pass on WSL Ubuntu and connect it to your existing password store.
 
 Remember that your private key is extremely sensitive. Now that it's imported into your GPG keyring, you should ensure that your Windows system is secured with a strong password and disk encryption if possible.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Setting Up WSL Ubuntu for Pass](06_Setting_Up_WSL_Ubuntu_for_Pass.md)
+- Next: [Setting Up Pass on WSL Ubuntu](08_Setting_Up_Pass_on_WSL_Ubuntu.md)
+- Prerequisites:
+  - [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md)
+  - [Exporting GPG Keys for Cross-Platform Use](05_Exporting_GPG_Keys_for_Cross_Platform_Use.md)

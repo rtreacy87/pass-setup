@@ -209,3 +209,10 @@ Congratulations! You've successfully:
 Your Windows system is now prepared for importing your GPG keys and setting up Pass. In the next guide, we'll import the GPG keys you exported from your macOS system.
 
 Remember that WSL provides a full Linux environment, so all the Linux commands you've learned for macOS will work the same way in WSL Ubuntu.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Exporting GPG Keys for Cross-Platform Use](05_Exporting_GPG_Keys_for_Cross_Platform_Use.md)
+- Next: [Importing GPG Keys to WSL Ubuntu](07_Importing_GPG_Keys_to_WSL_Ubuntu.md)
+- Prerequisites: None

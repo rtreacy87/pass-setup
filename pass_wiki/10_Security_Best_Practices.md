@@ -59,7 +59,7 @@ Periodically rotate your GPG keys to limit the impact of potential compromises:
    ```bash
    # Initialize pass with both old and new keys
    pass init OLD_KEY_ID NEW_KEY_ID
-   
+
    # Remove the old key
    pass init NEW_KEY_ID
    ```
@@ -318,3 +318,13 @@ Key takeaways:
 - Be prepared for potential security incidents
 
 In the next guide, we'll explore GUI clients and browser integration options to make your password management system more convenient while maintaining security.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Synchronization Workflow Between Systems](09_Synchronization_Workflow_Between_Systems.md)
+- Next: [GUI Clients and Browser Integration](11_GUI_Clients_and_Browser_Integration.md)
+- Related:
+  - [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md) - For GPG key management
+  - [Git Integration for Pass](04_Git_Integration_for_Pass.md) - For repository security
+  - [Troubleshooting Guide](13_Troubleshooting_Guide.md) - For security-related issues

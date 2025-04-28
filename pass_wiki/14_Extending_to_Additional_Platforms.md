@@ -342,19 +342,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up GPG
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -d > private.key
           gpg --batch --import private.key
           echo "${{ secrets.GPG_PASSPHRASE }}" > passphrase.txt
           chmod 600 passphrase.txt
-          
+
       - name: Set up Pass
         run: |
           sudo apt-get install -y pass
           git clone ${{ secrets.PASSWORD_STORE_REPO }} ~/.password-store
-          
+
       - name: Use password in deployment
         run: |
           DB_PASSWORD=$(gpg --batch --passphrase-file passphrase.txt -d ~/.password-store/CI/database.gpg)
@@ -445,3 +445,13 @@ Key points to remember:
 With your password management system now extended to all your devices, you have a comprehensive solution that balances security, convenience, and flexibility.
 
 In the next guide, we'll cover long-term maintenance and administration of your password management system.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Troubleshooting Guide](13_Troubleshooting_Guide.md)
+- Next: [Maintenance and Administration](15_Maintenance_and_Administration.md)
+- Related:
+  - [GUI Clients and Browser Integration](11_GUI_Clients_and_Browser_Integration.md) - For desktop integration
+  - [Synchronization Workflow Between Systems](09_Synchronization_Workflow_Between_Systems.md) - For sync details
+  - [Security Best Practices](10_Security_Best_Practices.md) - For security considerations

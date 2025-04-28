@@ -99,7 +99,14 @@ To synchronize your passwords between devices, you'll need to set up a remote re
 
 ### Step 1: Create a Private Repository
 
-Go to your preferred Git hosting service (GitHub, GitLab, etc.) and create a new private repository. Do not initialize it with any files.
+1. Go to your preferred Git hosting service (GitHub, GitLab, etc.)
+2. Log in to your account (you can use your standard account)
+3. Create a new repository named "password-store" (or another name of your choice)
+4. Make sure to set it as **Private**
+5. Do NOT initialize it with a README, .gitignore, or license (leave those options unchecked)
+6. Click "Create repository"
+
+This step is **critical** - you must create the repository on your Git hosting service before pushing to it.
 
 ### Step 2: Add the Remote Repository to Your Local Git Configuration
 
@@ -125,6 +132,99 @@ This command:
 - Uses the `-u` flag to remember these settings for future pushes
 
 If you're using SSH authentication for Git (recommended), you might need to set up SSH keys if you haven't already. If you're using HTTPS, you'll be prompted for your username and password.
+
+### Troubleshooting Remote Repository Setup
+
+If you encounter issues when setting up your remote repository, here are some common problems and solutions:
+
+#### Error: "remote origin already exists"
+
+If you see this error when trying to add a remote:
+
+```
+error: remote origin already exists.
+```
+
+This means you've already configured a remote named "origin". You can:
+
+1. Check your current remote configuration:
+   ```bash
+   pass git remote -v
+   ```
+
+2. Remove the existing remote if it's incorrect:
+   ```bash
+   pass git remote remove origin
+   ```
+
+3. Add the correct remote:
+   ```bash
+   pass git remote add origin git@github.com:yourusername/password-store.git
+   ```
+
+#### Error: "src refspec main does not match any"
+
+If you see this error when trying to push:
+
+```
+error: src refspec main does not match any
+error: failed to push some refs to 'github.com:yourusername/password-store.git'
+```
+
+This means you're trying to push a branch that doesn't exist locally. Check your current branch:
+
+```bash
+pass git branch
+```
+
+If you see `* master` instead of `* main`, you should push the master branch:
+
+```bash
+pass git push -u origin master
+```
+
+Alternatively, if you prefer to use `main` (which is becoming the standard):
+
+```bash
+pass git branch -m master main
+pass git push -u origin main
+```
+
+#### Error: "Repository not found" or "Could not read from remote repository"
+
+If you see an error like:
+
+```
+ERROR: Repository not found.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+```
+
+This could be due to several issues:
+
+1. **The repository doesn't exist yet on GitHub/GitLab**:
+   - Make sure you've created the repository on your Git hosting service
+   - Double-check the repository name
+
+2. **SSH authentication issues**:
+   - Verify your SSH connection to GitHub:
+     ```bash
+     ssh -T git@github.com
+     ```
+   - You should see: "Hi username! You've successfully authenticated..."
+
+3. **Incorrect repository URL**:
+   - Check your remote URL:
+     ```bash
+     pass git remote -v
+     ```
+   - Make sure it matches your repository on GitHub/GitLab
+   - If needed, update it:
+     ```bash
+     pass git remote set-url origin git@github.com:yourusername/password-store.git
+     ```
 
 ## Automating Git Operations with Pass
 
@@ -250,3 +350,10 @@ Congratulations! You've successfully:
 With Git integration, your password management system is now more robust, with version control and the ability to synchronize between devices. In the next guide, we'll cover how to export your GPG keys so you can set up Pass on additional systems.
 
 Remember that while your passwords are encrypted in the Git repository, the repository itself contains metadata about your password organization. Always use a private repository and follow security best practices.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Initializing Pass on macOS](03_Initializing_Pass_on_macOS.md)
+- Next: [Exporting GPG Keys for Cross-Platform Use](05_Exporting_GPG_Keys_for_Cross_Platform_Use.md)
+- Related: [Troubleshooting Guide](13_Troubleshooting_Guide.md) - For help with Git-related issues

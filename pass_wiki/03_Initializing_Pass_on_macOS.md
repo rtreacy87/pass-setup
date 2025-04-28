@@ -249,3 +249,9 @@ Congratulations! You've successfully:
 Your password management system is now operational on your macOS system. In the next guide, we'll set up Git integration to enable synchronization between different systems.
 
 Remember that all your passwords are stored in encrypted files in the `~/.password-store/` directory. While they're encrypted and secure, it's still a good practice to ensure your computer is also protected with a strong login password and disk encryption.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md)
+- Next: [Git Integration for Pass](04_Git_Integration_for_Pass.md)

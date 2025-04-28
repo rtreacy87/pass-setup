@@ -246,3 +246,9 @@ Congratulations! You've successfully:
 Your GPG keys are now ready to be used with Pass. In the next guide, we'll install Pass and initialize your password store using these keys.
 
 Remember to keep your private key secure and never share it with anyone. Also, make sure you don't forget your passphrase, as there's no way to recover it if lost.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Introduction to Pass Password Management](01_Introduction_to_Pass.md)
+- Next: [Initializing Pass on macOS](03_Initializing_Pass_on_macOS.md)

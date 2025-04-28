@@ -361,3 +361,12 @@ Congratulations! You've learned:
 By following these practices, you'll ensure your passwords stay in sync across your devices, giving you secure and convenient access to your passwords wherever you are.
 
 In the next guide, we'll cover security best practices to keep your password management system safe.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Setting Up Pass on WSL Ubuntu](08_Setting_Up_Pass_on_WSL_Ubuntu.md)
+- Next: [Security Best Practices](10_Security_Best_Practices.md)
+- Related:
+  - [Git Integration for Pass](04_Git_Integration_for_Pass.md) - For Git setup details
+  - [Troubleshooting Guide](13_Troubleshooting_Guide.md) - For help with synchronization issues

@@ -275,3 +275,12 @@ Congratulations! You've successfully:
 Your cross-platform password management system is now fully operational, allowing you to securely manage your passwords from both macOS and Windows systems.
 
 In the next guide, we'll cover a detailed synchronization workflow to ensure your passwords stay in sync across your devices.
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Previous: [Importing GPG Keys to WSL Ubuntu](07_Importing_GPG_Keys_to_WSL_Ubuntu.md)
+- Next: [Synchronization Workflow Between Systems](09_Synchronization_Workflow_Between_Systems.md)
+- Related:
+  - [Git Integration for Pass](04_Git_Integration_for_Pass.md) - For Git setup details
+  - [GUI Clients and Browser Integration](11_GUI_Clients_and_Browser_Integration.md) - For GUI options

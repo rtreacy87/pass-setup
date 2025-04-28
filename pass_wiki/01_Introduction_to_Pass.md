@@ -69,3 +69,8 @@ By the end of this wiki series, you will:
 The next article in this series will guide you through setting up GPG keys on macOS, which is the foundation of our password management system.
 
 Let's begin our journey to better password security!
+
+## Navigation
+
+- [README](README.md) - Wiki Home
+- Next: [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md)
