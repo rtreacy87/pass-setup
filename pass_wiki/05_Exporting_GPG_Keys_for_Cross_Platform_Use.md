@@ -86,6 +86,38 @@ The second command:
 
 This password should be different from your GPG key passphrase and should be strong. You'll need to remember this password to decrypt the archive on your other system.
 
+#### Troubleshooting Encryption Issues
+
+If you encounter an error like `gpg: problem with the agent: No pinentry` when trying to encrypt the archive, this means GPG can't find the pinentry program that handles password prompts. Here's how to fix it:
+
+1. **Specify the cipher algorithm and force terminal input**:
+   ```bash
+   gpg --symmetric --cipher-algo AES256 --pinentry-mode loopback gpg-keys.tar.gz
+   ```
+
+2. **If that doesn't work, configure GPG to use loopback mode**:
+   ```bash
+   echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+   ```
+   Then try the encryption command again:
+   ```bash
+   gpg -c gpg-keys.tar.gz
+   ```
+
+3. **For macOS users, install and configure pinentry-mac**:
+   ```bash
+   brew install pinentry-mac
+   echo "pinentry-program /usr/local/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+   gpgconf --kill gpg-agent
+   ```
+   Then try the encryption command again.
+
+4. **As a last resort, use OpenSSL instead of GPG**:
+   ```bash
+   openssl enc -aes-256-cbc -salt -in gpg-keys.tar.gz -out gpg-keys.tar.gz.enc
+   ```
+   This will also prompt for a password and create an encrypted file.
+
 ### Option 2: Use an Encrypted USB Drive
 
 If you have an encrypted USB drive:

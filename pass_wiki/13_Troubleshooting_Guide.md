@@ -300,6 +300,45 @@ This occurs when GPG encryption fails.
    # Type "save" to save changes
    ```
 
+### Problem: "gpg: problem with the agent: No pinentry"
+
+This error occurs when GPG can't find the pinentry program that handles password prompts.
+
+#### Solutions
+
+1. Force GPG to use terminal for password input:
+   ```bash
+   gpg --pinentry-mode loopback -c filename.txt
+   ```
+
+2. Configure GPG to always use loopback mode:
+   ```bash
+   echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+   ```
+
+3. For macOS users, install and configure pinentry-mac:
+   ```bash
+   brew install pinentry-mac
+   echo "pinentry-program /usr/local/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+   gpgconf --kill gpg-agent
+   ```
+
+4. For Linux users, ensure pinentry is installed:
+   ```bash
+   # On Debian/Ubuntu
+   sudo apt install pinentry-curses
+
+   # On RHEL/CentOS
+   sudo yum install pinentry
+   ```
+
+5. Restart the GPG agent:
+   ```bash
+   gpgconf --kill gpg-agent
+   ```
+
+For more detailed solutions when encrypting files for transfer, see the [Exporting GPG Keys guide](05_Exporting_GPG_Keys_for_Cross_Platform_Use.md#troubleshooting-encryption-issues).
+
 ## WSL-Specific Troubleshooting
 
 ### Problem: Cannot access Windows files from WSL
