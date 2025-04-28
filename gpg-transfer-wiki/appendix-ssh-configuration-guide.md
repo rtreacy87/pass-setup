@@ -138,9 +138,215 @@ New-NetFirewallRule -DisplayName "WSL SSH" -Direction Inbound -Protocol TCP -Loc
 6. Select all network types and click Next
 7. Name the rule "WSL SSH" and click Finish
 
-## Advanced SSH Security Configuration
+## Security Hardening for SSH
 
-For enhanced security, consider these additional configurations:
+Securing your SSH server is critical, especially when it's used for transferring sensitive data like GPG keys. This section covers security hardening for both WSL and Windows environments.
+
+### SSH Security Hardening in WSL
+
+To enhance the security of your SSH server in WSL:
+
+```bash
+# Edit the SSH configuration
+sudo nano /etc/ssh/sshd_config
+```
+
+Add or modify these settings:
+
+```
+# Use only strong encryption algorithms
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+
+# Use only strong MAC algorithms
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+
+# Use only strong key exchange algorithms
+KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+
+# Disable weak authentication methods
+HostbasedAuthentication no
+IgnoreRhosts yes
+
+# Limit login attempts
+MaxAuthTries 3
+MaxSessions 2
+
+# Set login grace time
+LoginGraceTime 30s
+
+# Disable empty passwords
+PermitEmptyPasswords no
+
+# Disable X11 forwarding (not needed for key transfers)
+X11Forwarding no
+
+# Set strict mode
+StrictModes yes
+
+# Enable privilege separation
+UsePrivilegeSeparation sandbox
+
+# Set logging level
+LogLevel VERBOSE
+
+# Disable TCP forwarding (not needed for key transfers)
+AllowTcpForwarding no
+GatewayPorts no
+PermitTunnel no
+```
+
+After making these changes, restart the SSH service:
+
+```bash
+sudo service ssh restart
+```
+
+### Security Hardening for Windows SSH Access
+
+When accessing SSH from Windows or allowing SSH connections to your Windows machine, follow these additional security measures:
+
+#### 1. Install Windows OpenSSH Client and Server (if needed)
+
+```powershell
+# Run in PowerShell as Administrator
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+```
+
+#### 2. Configure Windows OpenSSH Server (if used)
+
+```powershell
+# Start and configure the service
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+
+# Confirm the firewall rule is configured
+Get-NetFirewallRule -Name *ssh*
+```
+
+#### 3. Create a Secure Windows SSH Configuration
+
+Create or edit the file at `C:\ProgramData\ssh\sshd_config`:
+
+```
+# Use only strong encryption
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+
+# Use only strong MACs
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+
+# Disable password authentication (use keys only)
+PasswordAuthentication no
+PermitEmptyPasswords no
+
+# Disable root login
+PermitRootLogin no
+
+# Limit login attempts
+MaxAuthTries 3
+
+# Set login grace time
+LoginGraceTime 30s
+
+# Disable X11 forwarding
+X11Forwarding no
+
+# Set strict mode
+StrictModes yes
+
+# Set logging level
+LogLevel VERBOSE
+
+# Restrict to specific users (replace with your Windows username)
+AllowUsers YourWindowsUsername
+```
+
+After editing, restart the SSH service:
+
+```powershell
+Restart-Service sshd
+```
+
+#### 4. Use Windows Defender Firewall to Restrict SSH Access
+
+```powershell
+# Create a more restrictive firewall rule (example for allowing only specific IP)
+New-NetFirewallRule -DisplayName "SSH Restricted" -Direction Inbound -Protocol TCP -LocalPort 22 -RemoteAddress "192.168.1.0/24" -Action Allow
+
+# Remove the more permissive rule if it exists
+Remove-NetFirewallRule -DisplayName "SSH" -ErrorAction SilentlyContinue
+```
+
+#### 5. Enable Windows Event Logging for SSH
+
+```powershell
+# Configure enhanced logging
+wevtutil sl Microsoft-Windows-SSHd/Admin /e:true
+wevtutil sl Microsoft-Windows-SSHd/Operational /e:true
+```
+
+#### 6. Use Windows Defender Advanced Threat Protection (if available)
+
+If you have Microsoft Defender for Endpoint:
+
+1. Go to Security Center → Settings → Advanced features
+2. Enable "Custom network indicators" 
+3. Add monitoring for suspicious SSH traffic patterns
+
+#### 7. Implement Account Lockout Policies
+
+```powershell
+# Set account lockout policy
+net accounts /lockoutthreshold:5 /lockoutduration:30 /lockoutwindow:30
+```
+
+#### 8. Use Windows Hello for SSH Authentication (Windows 10/11)
+
+For enhanced security, you can configure Windows SSH to use Windows Hello:
+
+1. Install the Windows Hello OpenSSH component
+2. Configure SSH to use the Windows security key provider
+
+```powershell
+# Add this to your SSH config
+Host *
+    SecurityKeyProvider winhello.dll
+```
+
+### Best Practices for SSH Key Management in Windows
+
+1. **Store SSH keys securely**:
+   - Use Windows Credential Manager
+   - Consider hardware security keys (YubiKey, etc.)
+
+2. **Use separate keys for different purposes**:
+   - Don't use the same key for all systems
+   - Create dedicated keys for sensitive operations
+
+3. **Set appropriate permissions**:
+   ```powershell
+   # Restrict access to SSH key files
+   icacls C:\Users\YourUsername\.ssh\id_rsa /inheritance:r
+   icacls C:\Users\YourUsername\.ssh\id_rsa /grant:r "YourUsername:(R,W)"
+   ```
+
+4. **Regularly rotate SSH keys**:
+   - Create new keys periodically
+   - Remove old authorized keys
+
+5. **Use SSH config file for security settings**:
+   Create or edit `C:\Users\YourUsername\.ssh\config`:
+   ```
+   Host *
+       HashKnownHosts yes
+       StrictHostKeyChecking ask
+       VerifyHostKeyDNS yes
+       ForwardAgent no
+       ForwardX11 no
+       ControlMaster no
+   ```
+
+## Advanced SSH Security Configuration
 
 ### Using SSH Keys Instead of Passwords
 
