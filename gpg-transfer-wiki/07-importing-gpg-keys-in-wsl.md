@@ -461,6 +461,84 @@ gpg --list-secret-keys
 gpg --import private_key.asc
 ```
 
+### Fixing "gpg: signing failed: Inappropriate ioctl for device" in Git
+
+If you encounter this error when trying to sign Git commits, it's a common issue in WSL where GPG can't properly access the terminal for passphrase input. Here are several solutions:
+
+#### Solution 1: Set GPG to use loopback pinentry mode
+
+```bash
+# Add this to your GPG configuration
+echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+
+# Also add this to tell GPG which TTY to use
+echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
+source ~/.bashrc
+```
+
+What this does:
+- `pinentry-mode loopback` tells GPG to use a simpler method for passphrase input
+- `export GPG_TTY=$(tty)` helps GPG find your terminal for input
+
+#### Solution 2: Configure GPG to use the correct pinentry program
+
+```bash
+# Install a terminal-based pinentry program
+sudo apt install pinentry-curses
+
+# Configure GPG to use it
+echo "pinentry-program /usr/bin/pinentry-curses" > ~/.gnupg/gpg-agent.conf
+
+# Restart the GPG agent
+gpgconf --kill gpg-agent
+gpg-agent --daemon
+```
+
+What this does:
+- Installs a terminal-friendly pinentry program
+- Configures GPG to use this program for passphrase prompts
+- Restarts the agent to apply changes
+
+#### Solution 3: Use a different GPG_TTY approach
+
+```bash
+# Add these lines to your ~/.bashrc file
+echo 'export GPG_TTY=$TTY' >> ~/.bashrc
+echo 'gpg-connect-agent updatestartuptty /bye > /dev/null' >> ~/.bashrc
+source ~/.bashrc
+```
+
+What this does:
+- Sets the GPG TTY variable differently
+- Tells the GPG agent to update its TTY settings on startup
+- Applies the changes to your current session
+
+#### Solution 4: Temporarily bypass signing for a single commit
+
+If you need to make a commit urgently and can't solve the GPG issue right away:
+
+```bash
+# Make a commit without signing
+git commit --no-gpg-sign -m "your commit message"
+```
+
+What this does:
+- Creates a commit without a GPG signature
+- Overrides your global signing settings for this one commit
+
+#### Verifying the Fix
+
+After applying one of these solutions, try making a signed commit again:
+
+```bash
+# Create a test file
+echo "test" > test_file
+git add test_file
+git commit -m "Test GPG signing after fix"
+```
+
+If the commit succeeds without the error, the issue is resolved.
+
 ## Next Steps
 
 Now that you've successfully imported your GPG keys into WSL, you can:
