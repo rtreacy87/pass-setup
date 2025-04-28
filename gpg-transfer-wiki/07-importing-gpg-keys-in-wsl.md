@@ -290,6 +290,85 @@ What these commands do:
 - `commit.gpgsign true` makes Git sign all commits by default
 - `tag.gpgsign true` makes Git sign all tags by default
 
+### Understanding Git Signing: Benefits and Disadvantages
+
+#### Benefits of GPG Signing in Git:
+
+1. **Verification of Identity**: Signing proves that commits actually came from you, not someone impersonating you
+2. **Integrity Protection**: Ensures your code hasn't been tampered with after you committed it
+3. **Non-repudiation**: You cannot deny making a commit that has your valid signature
+4. **Required by Some Projects**: Some open-source projects require signed commits
+5. **GitHub Verification Badge**: GitHub displays a "Verified" badge next to signed commits
+
+#### Disadvantages of GPG Signing:
+
+1. **Additional Complexity**: Requires setting up and maintaining GPG keys
+2. **Passphrase Management**: Need to manage your GPG passphrase securely
+3. **Performance Impact**: Slight delay when making commits due to signing process
+4. **Key Management Overhead**: Need to handle key expiration, revocation, and backup
+5. **Potential Workflow Disruption**: Entering passphrase can interrupt coding flow
+
+### Passphrase Requirements and Caching
+
+When using GPG signing with Git, you don't need to enter your passphrase for every commit thanks to the GPG agent's caching mechanism:
+
+- **First Commit**: You'll be prompted for your passphrase
+- **Subsequent Commits**: No passphrase needed until the cache expires
+- **Cache Expiration**: Based on your `default-cache-ttl` setting (we set it to 3600 seconds/1 hour)
+- **After Inactivity**: You'll need to enter your passphrase again after the cache expires
+- **After System Restart**: You'll need to enter your passphrase again
+
+The GPG agent handles this caching securely, so you get both security and convenience.
+
+### Enabling and Disabling Signing
+
+You can enable or disable signing at different levels:
+
+#### Global Enabling (for all repositories):
+```bash
+# Enable signing for all commits
+git config --global commit.gpgsign true
+
+# Enable signing for all tags
+git config --global tag.gpgsign true
+```
+
+#### Global Disabling:
+```bash
+# Disable signing for all commits
+git config --global commit.gpgsign false
+
+# Disable signing for all tags
+git config --global tag.gpgsign false
+```
+
+#### Repository-Specific Settings:
+```bash
+# Enable just for current repository (omit --global)
+git config commit.gpgsign true
+
+# Disable just for current repository
+git config commit.gpgsign false
+```
+
+#### Per-Commit Control:
+```bash
+# Force signing for a single commit (even if disabled globally)
+git commit -S -m "Signed commit message"
+
+# Skip signing for a single commit (even if enabled globally)
+git commit --no-gpg-sign -m "Unsigned commit message"
+```
+
+#### Per-Tag Control:
+```bash
+# Force signing for a single tag
+git tag -s v1.0 -m "Signed tag"
+
+# Create unsigned tag
+git tag -a v1.0 -m "Unsigned tag"
+```
+
 ### Testing Git Signing
 
 To verify that Git signing is working correctly:
@@ -309,7 +388,7 @@ git add test_file
 git commit -m "Test GPG signing"
 ```
 
-If your key is properly configured, Git will prompt you for your GPG key passphrase during the commit.
+If your key is properly configured, Git will prompt you for your GPG key passphrase during the commit (but only the first time, thanks to caching).
 
 ### Verifying the Signed Commit
 
