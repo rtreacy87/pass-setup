@@ -337,6 +337,91 @@ This error occurs when GPG can't find the pinentry program that handles password
    gpgconf --kill gpg-agent
    ```
 
+### Problem: "gpg: Sorry, we are in batchmode - can't get input"
+
+This error occurs when GPG is running in batch mode but requires user input (like a passphrase). This commonly happens when using Pass in scripts or when environment variables are incorrectly set.
+
+#### Diagnosis
+
+This typically happens when:
+- You're running Pass in a non-interactive environment
+- The `GPG_TTY` environment variable is not set correctly
+- The `--batch` flag is being used (explicitly or implicitly)
+- The `--no-tty` option is active
+
+#### Solutions
+
+1. Set the `GPG_TTY` environment variable:
+   ```bash
+   export GPG_TTY=$(tty)
+   ```
+   Add this to your `~/.bashrc` or `~/.zshrc` for a permanent fix:
+   ```bash
+   echo 'export GPG_TTY=$(tty)' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+
+2. Force GPG to use loopback mode for passphrase input:
+   ```bash
+   echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+   ```
+
+3. Use the `--no-batch` flag explicitly when calling GPG:
+   ```bash
+   gpg --no-batch -d ~/.password-store/path/to/password.gpg
+   ```
+
+4. Configure the GPG agent to use the correct pinentry program:
+   ```bash
+   # For terminal-based pinentry
+   echo "pinentry-program /usr/bin/pinentry-curses" >> ~/.gnupg/gpg-agent.conf
+
+   # For GUI-based pinentry (on systems with X11)
+   echo "pinentry-program /usr/bin/pinentry-gtk-2" >> ~/.gnupg/gpg-agent.conf
+
+   # For macOS
+   echo "pinentry-program /usr/local/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+
+   # Restart the agent
+   gpgconf --kill gpg-agent
+   ```
+
+5. If using Pass in a script, provide the passphrase via a file descriptor:
+   ```bash
+   # Create a named pipe
+   mkfifo /tmp/gpg-pipe
+
+   # In one terminal, provide the passphrase
+   echo "YOUR_PASSPHRASE" > /tmp/gpg-pipe
+
+   # In another terminal or script
+   gpg --batch --passphrase-fd 3 -d file.gpg 3< /tmp/gpg-pipe
+
+   # Clean up
+   rm /tmp/gpg-pipe
+   ```
+   Note: This method should be used with caution as it can expose your passphrase.
+
+6. Use a GPG agent with cached credentials:
+   ```bash
+   # Start the agent if not running
+   gpg-agent --daemon
+
+   # Unlock your key once interactively
+   echo "test" | gpg -e -r YOUR_KEY_ID > /dev/null
+
+   # Now batch operations should work without prompting
+   ```
+
+7. For WSL users, ensure proper TTY handling:
+   ```bash
+   # Add to your .bashrc or .zshrc
+   if [[ -n "$WSL_DISTRO_NAME" ]]; then
+     export GPG_TTY=$(tty)
+     gpg-connect-agent updatestartuptty /bye > /dev/null
+   fi
+   ```
+
 For more detailed solutions when encrypting files for transfer, see the [Exporting GPG Keys guide](05_Exporting_GPG_Keys_for_Cross_Platform_Use.md#troubleshooting-encryption-issues).
 
 ## WSL-Specific Troubleshooting
