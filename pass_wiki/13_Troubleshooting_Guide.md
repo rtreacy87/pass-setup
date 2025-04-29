@@ -148,6 +148,102 @@ ssh -T git@github.com
    pass git remote set-url origin git@github.com:username/repo.git
    ```
 
+### Problem: Having to enter SSH credentials repeatedly
+
+This occurs when your SSH agent isn't properly configured to persist your credentials between sessions or when the agent isn't running correctly.
+
+#### Diagnosis
+
+Check if your SSH agent is running and has your keys loaded:
+
+```bash
+ssh-add -l
+```
+
+If it returns "The agent has no identities," your keys aren't loaded. If it returns "Could not open a connection to your authentication agent," the SSH agent isn't running.
+
+#### Solutions
+
+1. Start the SSH agent and add your key manually:
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/id_ed25519
+   ```
+
+2. Add SSH agent configuration to your shell startup file (`.bashrc`, `.zshrc`, etc.):
+   ```bash
+   # Add to ~/.bashrc or ~/.zshrc
+   if [ -z "$SSH_AUTH_SOCK" ]; then
+     eval "$(ssh-agent -s)"
+     ssh-add ~/.ssh/id_ed25519 2>/dev/null
+   fi
+   ```
+
+3. For a more robust solution that maintains a persistent socket:
+   ```bash
+   # Add to ~/.bashrc or ~/.zshrc
+   export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+
+   # Check if the agent socket exists and is valid
+   ssh-add -l &>/dev/null
+   if [ "$?" -eq 2 ]; then
+     # Socket exists but agent is not running
+     rm -f "$SSH_AUTH_SOCK"
+     # Start a new agent
+     ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
+   fi
+
+   # Add keys if the agent has no identities
+   ssh-add -l &>/dev/null
+   if [ "$?" -eq 1 ]; then
+     ssh-add ~/.ssh/id_ed25519 2>/dev/null
+   fi
+   ```
+
+4. If your SSH agent is running but not persisting between sessions, check for conflicts:
+   - Make sure you don't have multiple SSH agent configurations in different startup files
+   - Check if any system services are managing the SSH agent (like gnome-keyring or KeePassXC)
+   - Ensure file permissions are correct:
+     ```bash
+     chmod 700 ~/.ssh
+     chmod 600 ~/.ssh/id_ed25519
+     ```
+
+5. For macOS users, use the keychain to store your SSH key passphrase:
+   ```bash
+   ssh-add -K ~/.ssh/id_ed25519
+   ```
+
+   For macOS Monterey (12) and later:
+   ```bash
+   ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+   ```
+
+   Add to your `~/.ssh/config`:
+   ```
+   Host *
+     UseKeychain yes
+     AddKeysToAgent yes
+     IdentityFile ~/.ssh/id_ed25519
+   ```
+
+6. For Windows/WSL users, consider using the Windows OpenSSH agent:
+   ```bash
+   # Add to ~/.bashrc in WSL
+   if [[ -n "$WSL_DISTRO_NAME" ]]; then
+     # Export Windows SSH_AUTH_SOCK to WSL
+     export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock
+
+     # Start the relay agent if not running
+     ss -a | grep -q $SSH_AUTH_SOCK
+     if [ $? -ne 0 ]; then
+       rm -f $SSH_AUTH_SOCK
+       (setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &) >/dev/null 2>&1
+     fi
+   fi
+   ```
+   Note: This requires installing `socat` in WSL and `npiperelay.exe` on Windows.
+
 ### Problem: "git pull" fails with merge conflicts
 
 This occurs when there are conflicting changes in your local and remote repositories.
