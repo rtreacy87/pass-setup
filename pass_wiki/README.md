@@ -34,13 +34,23 @@ This wiki series provides comprehensive documentation for setting up and maintai
 14. [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md) - Adding more systems to your password ecosystem
 15. [Maintenance and Administration](15_Maintenance_and_Administration.md) - Long-term management of your password system
 
+### Advanced GPG Key Management
+
+16. [Understanding GPG Subkeys for Pass](gpg_subkeys/16_Understanding_GPG_Subkeys_for_Pass.md) - Introduction to using GPG subkeys for enhanced security
+17. [Creating and Managing GPG Subkeys](gpg_subkeys/17_Creating_and_Managing_GPG_Subkeys.md) - Setting up and maintaining GPG subkeys
+18. [Exporting GPG Subkeys for Other Devices](gpg_subkeys/18_Exporting_GPG_Subkeys_for_Other_Devices.md) - Securely transferring subkeys to secondary devices
+19. [Setting Up Pass with GPG Subkeys](gpg_subkeys/19_Setting_Up_Pass_with_GPG_Subkeys.md) - Configuring pass to work with subkeys
+20. [Subkey Rotation and Maintenance](gpg_subkeys/20_Subkey_Rotation_and_Maintenance.md) - Managing subkey lifecycle and rotation
+21. [Troubleshooting GPG Subkeys with Pass](gpg_subkeys/21_Troubleshooting_GPG_Subkeys_with_Pass.md) - Solving common issues with subkeys
+
 ## How to Use This Wiki
 
 1. Start with the Introduction to understand the overall system
 2. Follow the guides in order for initial setup (articles 1-9)
 3. Refer to the Security Best Practices to ensure your system is secure
 4. Explore advanced topics as needed (articles 11-15)
-5. Use the Troubleshooting Guide when you encounter issues
+5. For enhanced security with GPG subkeys, follow the Advanced GPG Key Management series (articles 16-21)
+6. Use the Troubleshooting Guide when you encounter issues
 
 ### Navigation Tips
 
