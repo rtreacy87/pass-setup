@@ -562,6 +562,7 @@ With these practices in place, your cross-platform password management system wi
 
 - [README](README.md) - Wiki Home
 - Previous: [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md)
+- Next: [Real-Time Password Synchronization](16_Real_Time_Password_Synchronization.md)
 - Related:
   - [Security Best Practices](10_Security_Best_Practices.md) - For security considerations
   - [Advanced Features and Extensions](12_Advanced_Features_and_Extensions.md) - For backup and extension details

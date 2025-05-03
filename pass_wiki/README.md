@@ -33,6 +33,7 @@ This wiki series provides comprehensive documentation for setting up and maintai
 13. [Troubleshooting Guide](13_Troubleshooting_Guide.md) - Solving common issues with Pass, GPG, and Git
 14. [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md) - Adding more systems to your password ecosystem
 15. [Maintenance and Administration](15_Maintenance_and_Administration.md) - Long-term management of your password system
+16. [Real-Time Password Synchronization](16_Real_Time_Password_Synchronization.md) - Implementing immediate password updates across systems
 
 ### Advanced GPG Key Management
 

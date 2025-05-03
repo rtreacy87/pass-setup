@@ -1,6 +1,6 @@
 # Setting Up Scheduled Password Synchronization on macOS
 
-**Difficulty Level:** Intermediate  
+**Difficulty Level:** Intermediate
 **Time to Complete:** 30 minutes
 
 ## Introduction
@@ -269,11 +269,11 @@ Now that you have scheduled synchronization set up on macOS, the next step is to
 
 ---
 
-**Prerequisites**: 
+**Prerequisites**:
 - [Building Robust Synchronization Scripts](06_Creating_Synchronization_Scripts.md)
 
 **Next**: [Setting Up Scheduled Password Synchronization on WSL](08_Scheduled_Synchronization_on_WSL.md)
 
 **Related**:
-- [Implementing Real-time Password Synchronization](09_Real_Time_Synchronization.md)
+- [Implementing Real-time Password Synchronization](../pass_wiki/16_Real_Time_Password_Synchronization.md)
 - [Resolving Password Synchronization Conflicts](10_Handling_Synchronization_Conflicts.md)

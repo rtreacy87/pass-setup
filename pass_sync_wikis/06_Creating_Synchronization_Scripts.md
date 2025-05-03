@@ -1,6 +1,6 @@
 # Building Robust Synchronization Scripts
 
-**Difficulty Level:** Intermediate  
+**Difficulty Level:** Intermediate
 **Time to Complete:** 45 minutes
 
 ## Introduction
@@ -99,19 +99,19 @@ fi
 # Check for local changes
 if [ -n "$(git status --porcelain)" ]; then
     log_message "Local changes detected, committing..."
-    
+
     # Add all changes
     git add . || {
         log_message "ERROR: Failed to add changes to Git"
         exit 1
     }
-    
+
     # Commit changes
     git commit -m "Automatic sync: $(date)" || {
         log_message "ERROR: Failed to commit changes"
         exit 1
     }
-    
+
     log_message "Changes committed successfully"
 else
     log_message "No local changes detected"
@@ -126,10 +126,10 @@ git stash -q
 # Pull with rebase
 if git pull --rebase origin master 2>/dev/null || git pull --rebase origin main 2>/dev/null; then
     log_message "Pull successful"
-    
+
     # Apply stashed changes if any
     git stash pop -q 2>/dev/null || true
-    
+
     # Count updated password files
     UPDATED_FILES=$(git diff-tree -r --name-only --diff-filter=AM ORIG_HEAD HEAD 2>/dev/null | grep "\.gpg$" | wc -l)
     if [ $UPDATED_FILES -gt 0 ]; then
@@ -138,10 +138,10 @@ if git pull --rebase origin master 2>/dev/null || git pull --rebase origin main 
 else
     # Pull failed, try without rebase
     log_message "Rebase pull failed, trying regular pull..."
-    
+
     # Apply stashed changes
     git stash pop -q 2>/dev/null || true
-    
+
     if git pull origin master 2>/dev/null || git pull origin main 2>/dev/null; then
         log_message "Regular pull successful"
     else
@@ -154,7 +154,7 @@ fi
 # Push changes if we have commits to push
 if [ -n "$(git log @{push}.. 2>/dev/null)" ]; then
     log_message "Pushing changes to remote repository..."
-    
+
     if git push origin master 2>/dev/null || git push origin main 2>/dev/null; then
         log_message "Push successful"
     else
@@ -256,7 +256,7 @@ Try these scenarios to verify the script works correctly:
    ```bash
    # Add a new password
    pass generate test/sync-test 15
-   
+
    # Run the sync script
    pass-sync.sh
    ```
@@ -265,7 +265,7 @@ Try these scenarios to verify the script works correctly:
    ```bash
    # Run the sync script
    pass-sync.sh
-   
+
    # Verify the password exists
    pass test/sync-test
    ```
@@ -386,13 +386,13 @@ Now that you have a robust synchronization script, the next step is to set up sc
 
 ---
 
-**Prerequisites**: 
+**Prerequisites**:
 - [Using Git Hooks to Automate Password Synchronization](05_Understanding_Git_Hooks.md)
 
-**Next**: 
+**Next**:
 - [Setting Up Scheduled Password Synchronization on macOS](07_Scheduled_Synchronization_on_macOS.md)
 - [Setting Up Scheduled Password Synchronization on WSL](08_Scheduled_Synchronization_on_WSL.md)
 
 **Related**:
-- [Implementing Real-time Password Synchronization](09_Real_Time_Synchronization.md)
+- [Implementing Real-time Password Synchronization](../pass_wiki/16_Real_Time_Password_Synchronization.md)
 - [Resolving Password Synchronization Conflicts](10_Handling_Synchronization_Conflicts.md)
