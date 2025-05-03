@@ -103,6 +103,105 @@ chmod 600 ~/.gnupg/*
 
 ## Git Synchronization Problems
 
+### Problem: "error: cannot pull with rebase: Your index contains uncommitted changes"
+
+This error occurs when Git hooks try to pull changes but there are uncommitted changes in your working directory or staging area.
+
+#### Diagnosis
+
+This typically happens when:
+- You're using the pre-commit hook from the [Understanding Git Hooks](05_Understanding_Git_Hooks.md) guide
+- You have modified files that aren't part of the current commit
+- The stash operations in the hook are failing
+
+#### Solutions
+
+1. Fix the pre-commit hook to handle uncommitted changes better:
+   ```bash
+   # Navigate to your password store
+   cd ~/.password-store
+
+   # Edit the pre-commit hook
+   cat > .git/hooks/pre-commit << 'EOF'
+   #!/bin/bash
+
+   echo "Running pre-commit hook: Pulling latest changes..."
+
+   # Check if there are any uncommitted changes
+   if git diff --quiet; then
+     # No uncommitted changes, safe to pull
+     git pull --rebase origin master || git pull --rebase origin main
+   else
+     # There are uncommitted changes
+     echo "Stashing uncommitted changes..."
+     git stash -q --keep-index
+
+     # Pull the latest changes
+     git pull --rebase origin master || git pull --rebase origin main
+     PULL_STATUS=$?
+
+     # Restore stashed changes
+     echo "Restoring uncommitted changes..."
+     git stash pop -q
+
+     # If pull failed, report it but allow commit to proceed
+     if [ $PULL_STATUS -ne 0 ]; then
+       echo "Warning: Pull failed, but proceeding with commit."
+       echo "You may need to resolve conflicts manually later."
+     fi
+   fi
+
+   echo "Pre-commit hook completed."
+   EOF
+
+   # Make the hook executable
+   chmod +x .git/hooks/pre-commit
+   ```
+
+2. Manually commit or stash your changes before using Pass:
+   ```bash
+   # Navigate to your password store
+   cd ~/.password-store
+
+   # Check what files are modified
+   git status
+
+   # Commit any changes
+   git add .
+   git commit -m "Manual commit before using Pass"
+
+   # Or stash them temporarily
+   git stash
+   ```
+
+3. Temporarily disable the pre-commit hook:
+   ```bash
+   # Navigate to your password store
+   cd ~/.password-store
+
+   # Disable the hook by renaming it
+   mv .git/hooks/pre-commit .git/hooks/pre-commit.disabled
+
+   # Use Pass commands...
+
+   # Re-enable the hook when done
+   mv .git/hooks/pre-commit.disabled .git/hooks/pre-commit
+   ```
+
+4. If you frequently encounter this issue, consider modifying your workflow:
+   - Manually sync your password store before and after making changes
+   - Use a simpler pre-commit hook that doesn't try to pull changes
+   - Create a separate script to handle synchronization outside of Git hooks
+
+5. If the error persists, check for Git lock files:
+   ```bash
+   # Navigate to your password store
+   cd ~/.password-store
+
+   # Check for and remove lock files if Git isn't running
+   rm -f .git/index.lock
+   ```
+
 ### Problem: "git push" fails with "Permission denied (publickey)"
 
 This error occurs when SSH authentication fails.
