@@ -1,6 +1,6 @@
 # Using Git Hooks to Automate Password Synchronization
 
-**Difficulty Level:** Intermediate  
+**Difficulty Level:** Intermediate
 **Time to Complete:** 30 minutes
 
 ## Introduction
@@ -60,14 +60,32 @@ cat > .git/hooks/pre-commit << 'EOF'
 
 echo "Running pre-commit hook: Pulling latest changes..."
 
-# Stash any changes not being committed
-git stash -q --keep-index
+# Save the current state of the index
+git rev-parse HEAD > .git/ORIG_HEAD_PRECOMMIT
 
-# Pull the latest changes
-git pull --rebase origin master || git pull --rebase origin main
+# Stash everything, including staged changes
+echo "Stashing all changes..."
+git stash save --include-untracked --quiet "pre-commit-stash"
+STASH_RESULT=$?
 
-# Restore stashed changes
-git stash pop -q
+if [ $STASH_RESULT -eq 0 ]; then
+    # Pull the latest changes
+    echo "Pulling latest changes..."
+    git pull --rebase origin master || git pull --rebase origin main
+    PULL_STATUS=$?
+
+    # Restore the stashed changes
+    echo "Restoring changes..."
+    git stash pop --quiet
+
+    # If pull failed, report it but allow commit to proceed
+    if [ $PULL_STATUS -ne 0 ]; then
+        echo "Warning: Pull failed, but proceeding with commit."
+        echo "You may need to resolve conflicts manually later."
+    fi
+else
+    echo "No changes to stash or stash failed. Proceeding without pull."
+fi
 
 echo "Pre-commit hook completed."
 EOF
@@ -77,11 +95,13 @@ chmod +x .git/hooks/pre-commit
 ```
 
 What this script does:
-- Temporarily stashes any changes that aren't part of the current commit
+- Saves the current HEAD commit for reference
+- Stashes ALL changes, including both staged and unstaged changes
 - Pulls the latest changes from the repository with rebase
 - Tries both `master` and `main` branch names (to handle different GitHub defaults)
-- Restores the stashed changes
-- Provides feedback about what's happening
+- Restores the stashed changes, including the staged ones
+- Handles errors gracefully, allowing the commit to proceed even if the pull fails
+- Provides detailed feedback about what's happening at each step
 
 ### Step 3: Create the post-commit Hook
 
@@ -232,6 +252,100 @@ ls -la .git/hooks/
 chmod +x .git/hooks/pre-commit .git/hooks/post-commit .git/hooks/post-merge
 ```
 
+### "Cannot pull with rebase: Your index contains uncommitted changes" Error
+
+This common error occurs because of how Pass and Git hooks interact:
+
+1. When you run a Pass command (like `pass insert`), Pass first creates and encrypts the password file
+2. Pass then stages this file (adds it to the Git index)
+3. At this point, your pre-commit hook runs
+4. The hook tries to pull with rebase, but Git refuses because you have staged changes
+
+#### Solution 1: Use the Improved Pre-commit Hook (Recommended)
+
+The improved pre-commit hook in this guide handles this issue by stashing all changes, including staged ones, before pulling.
+
+If you're still experiencing this error with the improved hook, make sure you're using the latest version of the hook and that it's properly executable:
+
+```bash
+chmod +x .git/hooks/pre-commit
+```
+
+#### Solution 2: Use a Pre-push Hook Instead
+
+If you continue to have issues with the pre-commit hook, you can use a pre-push hook instead:
+
+```bash
+cat > .git/hooks/pre-push << 'EOF'
+#!/bin/bash
+
+echo "Running pre-push hook: Pulling latest changes..."
+
+# Fetch the latest changes
+git fetch origin
+
+# Check if we need to pull
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse @{u})
+
+if [ "$LOCAL" != "$REMOTE" ]; then
+    echo "Remote has changes. Pulling with rebase..."
+    git pull --rebase origin master || git pull --rebase origin main
+
+    if [ $? -ne 0 ]; then
+        echo "Pull failed. Please resolve conflicts manually."
+        exit 1
+    fi
+fi
+
+echo "Pre-push hook completed."
+EOF
+chmod +x .git/hooks/pre-push
+```
+
+This hook runs after the commit is complete but before pushing, avoiding the staged changes issue.
+
+#### Solution 3: Use a Post-commit Hook for Pulling
+
+Another approach is to move the pull operation to a post-commit hook:
+
+```bash
+cat > .git/hooks/post-commit << 'EOF'
+#!/bin/bash
+
+echo "Running post-commit hook: Pulling and pushing changes..."
+
+# Pull with rebase
+git pull --rebase origin master || git pull --rebase origin main
+PULL_STATUS=$?
+
+# If pull succeeded, push changes
+if [ $PULL_STATUS -eq 0 ]; then
+    git push origin master || git push origin main
+else
+    echo "Warning: Pull failed. Please resolve conflicts manually and then push."
+fi
+
+echo "Post-commit hook completed."
+EOF
+chmod +x .git/hooks/post-commit
+```
+
+This hook pulls after the commit is complete, avoiding the staged changes issue.
+
+#### Solution 4: Disable Automatic Git Integration in Pass
+
+As a last resort, you can disable Pass's automatic Git integration and handle synchronization manually:
+
+```bash
+# Disable automatic Git integration
+export PASSWORD_STORE_ENABLE_GIT=0
+
+# Create a sync alias
+echo 'alias pass-sync="cd ~/.password-store && git add . && git commit -m \"Password store update\" && git pull --rebase && git push"' >> ~/.bashrc
+source ~/.bashrc
+```
+
 ### Git Push/Pull Errors
 
 If the hooks fail to push or pull:
@@ -265,7 +379,7 @@ Now that you have Git hooks set up to automate the basic synchronization process
 
 ---
 
-**Prerequisites**: 
+**Prerequisites**:
 - [Installing and Configuring Pass on macOS](03_Configuring_Pass_on_macOS.md)
 - [Installing and Configuring Pass on WSL](04_Configuring_Pass_on_WSL.md)
 
