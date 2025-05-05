@@ -373,6 +373,127 @@ git add .
 git commit -m "Resolved conflicts"
 ```
 
+## Ensuring Hooks Trigger for All Password Operations
+
+By default, Pass only triggers Git operations (and thus Git hooks) when adding new passwords, but not when editing or removing existing ones. Let's fix this to ensure all password changes are properly synchronized.
+
+### Configuring Pass to Use Git for All Operations
+
+To make Pass use Git for all operations (add, edit, remove), you need to set the `PASSWORD_STORE_ENABLE_GIT` environment variable:
+
+```bash
+# Add to your .bashrc or .zshrc file
+echo 'export PASSWORD_STORE_ENABLE_GIT=true' >> ~/.bashrc
+source ~/.bashrc
+```
+
+This ensures that Pass will:
+- Commit changes when you add a new password
+- Commit changes when you edit an existing password
+- Commit changes when you remove a password
+
+Without this setting, only new passwords would trigger Git operations and hooks.
+
+### Testing Git Integration for All Operations
+
+Let's test that Git operations are triggered for all types of password changes:
+
+```bash
+# Create a test password
+pass generate test/git-hook-test 15
+
+# Edit the password
+pass edit test/git-hook-test
+
+# Remove the password
+pass rm test/git-hook-test
+```
+
+For each operation, you should see:
+1. The pre-commit hook running and pulling changes
+2. The post-commit hook running and pushing changes
+
+If you don't see the hooks running for edit or remove operations, check that:
+- The `PASSWORD_STORE_ENABLE_GIT` environment variable is set
+- You've restarted your terminal or sourced your `.bashrc`/`.zshrc` file
+
+## Changing the Default Editor in Pass
+
+By default, Pass uses the editor specified in your environment variables (usually `nano`). If you prefer a different editor, you can change it.
+
+### Setting the Editor Environment Variable
+
+Pass uses the `EDITOR` environment variable to determine which editor to use. To change it:
+
+```bash
+# For Vim
+echo 'export EDITOR=vim' >> ~/.bashrc
+
+# For VS Code
+echo 'export EDITOR="code --wait"' >> ~/.bashrc
+
+# For Emacs
+echo 'export EDITOR=emacs' >> ~/.bashrc
+
+# Apply the changes
+source ~/.bashrc
+```
+
+### Testing Your Editor Change
+
+To test that your editor change has taken effect:
+
+```bash
+# Create a new password to edit
+pass generate test/editor-test 15
+
+# Edit the password - should open in your chosen editor
+pass edit test/editor-test
+```
+
+### Editor-Specific Tips
+
+#### Vim
+
+If you're using Vim, you can create a specific configuration for editing passwords:
+
+```bash
+# Create a Vim configuration for Pass
+cat > ~/.vim/ftdetect/pass.vim << 'EOF'
+autocmd BufNewFile,BufRead /dev/shm/pass.* setlocal noswapfile
+EOF
+```
+
+This prevents Vim from creating swap files when editing passwords, which is more secure.
+
+#### VS Code
+
+When using VS Code, the `--wait` flag is important - it makes the command wait until the file is closed in VS Code before continuing. Without this, Pass might continue before you've finished editing.
+
+#### Terminal-Based Editors in WSL
+
+If you're using WSL and prefer terminal-based editors like Vim or Nano, no special configuration is needed.
+
+If you want to use a Windows GUI editor from WSL, you'll need to create a wrapper script. For example, for Notepad++:
+
+```bash
+# Create a wrapper script
+cat > ~/bin/notepadpp << 'EOF'
+#!/bin/bash
+FILE=$(wslpath -w "$1")
+/mnt/c/Program\ Files/Notepad++/notepad++.exe "$FILE"
+sleep 1  # Wait for Notepad++ to open
+while tasklist.exe | grep -q notepad++.exe; do
+    sleep 1
+done
+EOF
+chmod +x ~/bin/notepadpp
+
+# Set it as your editor
+echo 'export EDITOR=~/bin/notepadpp' >> ~/.bashrc
+source ~/.bashrc
+```
+
 ## Next Steps
 
 Now that you have Git hooks set up to automate the basic synchronization process, the next step is to create more robust synchronization scripts that can handle edge cases and provide better error handling.
