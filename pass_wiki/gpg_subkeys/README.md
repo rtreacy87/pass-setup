@@ -10,6 +10,7 @@ This section of the wiki provides detailed guides on using GPG subkeys with the 
 4. [Setting Up Pass with GPG Subkeys](19_Setting_Up_Pass_with_GPG_Subkeys.md) - Configuring pass to work with subkeys
 5. [Subkey Rotation and Maintenance](20_Subkey_Rotation_and_Maintenance.md) - Managing subkey lifecycle and rotation
 6. [Troubleshooting GPG Subkeys with Pass](21_Troubleshooting_GPG_Subkeys_with_Pass.md) - Solving common issues with subkeys
+7. [Understanding GPG Modes](22_Understanding_GPG_Modes.md) - Explaining GPG batch mode and other interaction methods
 
 ## Why Use Subkeys?
 

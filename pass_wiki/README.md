@@ -43,6 +43,7 @@ This wiki series provides comprehensive documentation for setting up and maintai
 19. [Setting Up Pass with GPG Subkeys](gpg_subkeys/19_Setting_Up_Pass_with_GPG_Subkeys.md) - Configuring pass to work with subkeys
 20. [Subkey Rotation and Maintenance](gpg_subkeys/20_Subkey_Rotation_and_Maintenance.md) - Managing subkey lifecycle and rotation
 21. [Troubleshooting GPG Subkeys with Pass](gpg_subkeys/21_Troubleshooting_GPG_Subkeys_with_Pass.md) - Solving common issues with subkeys
+22. [Understanding GPG Modes](gpg_subkeys/22_Understanding_GPG_Modes.md) - Explaining GPG batch mode and other interaction methods
 
 ## How to Use This Wiki
 
@@ -50,7 +51,7 @@ This wiki series provides comprehensive documentation for setting up and maintai
 2. Follow the guides in order for initial setup (articles 1-9)
 3. Refer to the Security Best Practices to ensure your system is secure
 4. Explore advanced topics as needed (articles 11-15)
-5. For enhanced security with GPG subkeys, follow the Advanced GPG Key Management series (articles 16-21)
+5. For enhanced security with GPG subkeys, follow the Advanced GPG Key Management series (articles 16-22)
 6. Use the Troubleshooting Guide when you encounter issues
 
 ### Navigation Tips
