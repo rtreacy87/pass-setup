@@ -209,6 +209,43 @@ make
 sudo make install
 ```
 
+#### Troubleshooting Browserpass Installation on WSL
+
+If you encounter errors like `env: 'go': No such file or directory` when trying to build browserpass-native, follow these steps:
+
+1. **Install Go on WSL Ubuntu**:
+   ```bash
+   sudo apt update
+   sudo apt install -y golang-go
+   ```
+
+2. **Verify Go installation**:
+   ```bash
+   go version
+   ```
+   This should display the installed Go version.
+
+3. **Retry building browserpass-native**:
+   ```bash
+   cd browserpass-native
+   make configure
+   make
+   sudo make install
+   ```
+
+4. **If you encounter permission issues**, ensure proper permissions:
+   ```bash
+   chmod -R 755 ~/.config/browserpass
+   ```
+
+5. **Verify installation**:
+   ```bash
+   which browserpass
+   # Should output: /usr/bin/browserpass
+   ```
+
+After successful installation, continue with the browser extension setup as described above.
+
 #### Installing the Browser Extension
 
 1. Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/browserpass/naepdomgkenhinolocfifgehidddafch) to install the extension
