@@ -194,8 +194,18 @@ With passff installed:
 
 On macOS:
 ```bash
+# Add the required tap first
+brew tap amar1729/formulae
 brew install browserpass
+
+# Configure for your browser (the installation will print similar instructions)
+# For Firefox:
+PREFIX='/opt/homebrew/opt/browserpass' make hosts-firefox-user -f '/opt/homebrew/opt/browserpass/lib/browserpass/Makefile'
+# For Chrome:
+# PREFIX='/opt/homebrew/opt/browserpass' make hosts-chrome-user -f '/opt/homebrew/opt/browserpass/lib/browserpass/Makefile'
 ```
+
+Note: The `PREFIX` path may vary depending on your Homebrew installation. If you're using an Intel Mac, the path might be `/usr/local/opt/browserpass` instead.
 
 On WSL Ubuntu:
 ```bash
@@ -209,7 +219,48 @@ make
 sudo make install
 ```
 
-#### Troubleshooting Browserpass Installation on WSL
+#### Troubleshooting Browserpass Installation
+
+##### macOS Installation Issues
+
+If you encounter an error like `Warning: No available formula with the name "browserpass"` when trying to install browserpass on macOS, you need to use a user-contributed tap:
+
+1. **Add the required tap and install browserpass**:
+   ```bash
+   brew tap amar1729/formulae
+   brew install browserpass
+   ```
+
+2. **Configure browser integration**:
+   After installation, you need to configure browserpass for your browser. The installation will print instructions, but typically you'll run:
+
+   For Firefox:
+   ```bash
+   PREFIX='/opt/homebrew/opt/browserpass' make hosts-firefox-user -f '/opt/homebrew/opt/browserpass/lib/browserpass/Makefile'
+   ```
+
+   For Chrome/Chromium:
+   ```bash
+   PREFIX='/opt/homebrew/opt/browserpass' make hosts-chrome-user -f '/opt/homebrew/opt/browserpass/lib/browserpass/Makefile'
+   ```
+
+   Note: Run these commands in your terminal. The `PREFIX` path may vary depending on your Homebrew installation. If you're using an Intel Mac, the path might be `/usr/local/opt/browserpass` instead.
+
+3. **Verify installation**:
+   ```bash
+   ls -la ~/.mozilla/native-messaging-hosts/
+   # Should show com.github.browserpass.native.json for Firefox
+
+   # Or for Chrome:
+   ls -la ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/
+   # Should show com.github.browserpass.native.json
+   ```
+
+4. **Install the browser extension**:
+   - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/browserpass-ce/)
+   - [Chrome Web Store](https://chrome.google.com/webstore/detail/browserpass-ce/naepdomgkenhinolocfifgehidddafch)
+
+##### WSL Installation Issues
 
 If you encounter errors like `env: 'go': No such file or directory` when trying to build browserpass-native, follow these steps:
 
