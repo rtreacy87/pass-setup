@@ -297,6 +297,104 @@ If you encounter errors like `env: 'go': No such file or directory` when trying 
 
 After successful installation, continue with the browser extension setup as described above.
 
+##### GPG Binary Detection Issues
+
+If you encounter an error like `Unable to fetch and parse login fields: Error: {"status":"error","code":22,"version":3001000,"params":{"action":"fetch","error":"Unable to detect the location of the gpg binary to use","message":"Unable to detect the location of the gpg binary"}}`, browserpass is having trouble finding your GPG installation. Here's how to fix it:
+
+1. **Create or edit the browserpass configuration file**:
+
+   For macOS:
+   ```bash
+   mkdir -p ~/.config/browserpass
+   nano ~/.config/browserpass/config.json
+   ```
+
+2. **Add the full path to your GPG binary**:
+   ```json
+   {
+     "gpgPath": "/opt/homebrew/bin/gpg"
+   }
+   ```
+
+   Note: The path may be different on your system. To find the correct path, run:
+   ```bash
+   which gpg
+   ```
+
+   On Intel Macs, it might be `/usr/local/bin/gpg` instead.
+
+3. **Save the file** (in nano: Ctrl+O, Enter, then Ctrl+X)
+
+4. **Restart your browser** to apply the changes
+
+5. **If the issue persists**, you can also try creating a `.browserpass.json` file in the root of your password store:
+   ```bash
+   nano ~/.password-store/.browserpass.json
+   ```
+
+   With the same content:
+   ```json
+   {
+     "gpgPath": "/opt/homebrew/bin/gpg"
+   }
+   ```
+
+This configuration tells browserpass exactly where to find your GPG binary, which should resolve the detection issue.
+
+##### GPG Passphrase Input Issues
+
+If you encounter an error like `Unable to fetch and parse login fields: Error: {"status":"error","code":24,"version":3001000,"params":{"action":"fetch","error":"Error: exit status 2, Stderr: gpg: Sorry, we are in batchmode - can't get input\n"...`, GPG is unable to prompt for your passphrase. This is typically caused by issues with the pinentry program. Here's how to fix it:
+
+1. **Install a GUI pinentry program** if you don't have one:
+
+   On macOS:
+   ```bash
+   brew install pinentry-mac
+   ```
+
+2. **Configure GPG to use the GUI pinentry**:
+   ```bash
+   echo "pinentry-program /opt/homebrew/bin/pinentry-mac" >> ~/.gnupg/gpg-agent.conf
+   ```
+
+   Note: The path may be different on your system. To find the correct path, run:
+   ```bash
+   which pinentry-mac
+   ```
+
+   On Intel Macs, it might be `/usr/local/bin/pinentry-mac` instead.
+
+3. **Restart the GPG agent**:
+   ```bash
+   gpgconf --kill gpg-agent
+   ```
+
+4. **Test that GPG can prompt for your passphrase**:
+   ```bash
+   echo "test" | gpg --encrypt --recipient YOUR_KEY_ID | gpg --decrypt
+   ```
+
+   Replace `YOUR_KEY_ID` with your actual GPG key ID. This should prompt for your passphrase with a GUI dialog.
+
+5. **Restart your browser** and try browserpass again.
+
+6. **If issues persist**, you can try adding these lines to your `~/.gnupg/gpg.conf` file:
+   ```bash
+   use-agent
+   batch
+   no-tty
+   ```
+
+7. **For more advanced troubleshooting**, you can enable browserpass debug mode by adding to your `~/.config/browserpass/config.json`:
+   ```json
+   {
+     "gpgPath": "/opt/homebrew/bin/gpg",
+     "debug": true
+   }
+   ```
+
+   Then check the browser console for more detailed error messages.
+
 #### Installing the Browser Extension
 
 1. Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/browserpass/naepdomgkenhinolocfifgehidddafch) to install the extension
