@@ -228,6 +228,77 @@ gpg --batch --decrypt ~/.password-store/test-password.gpg
 gpg --use-agent --decrypt ~/.password-store/test-password.gpg
 ```
 
+## Examples: Switching Between Modes and Verification
+
+Here are practical examples of switching to each mode and verifying which mode you're currently using:
+
+### Interactive Mode
+
+```bash
+# Find your GPG key ID first
+gpg --list-secret-keys --keyid-format LONG
+# Look for the line starting with "sec" and note the ID after the slash
+# For example: sec   rsa4096/1A2B3C4D5E6F7G8H
+
+# Option 1: Manually set your key ID (replace with your actual key ID)
+KEY_ID="1A2B3C4D5E6F7G8H"
+
+# Option 2: Automatically extract your first secret key ID
+# This works if you have only one key or want to use your primary key
+KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | head -n 1 | cut -d'/' -f2 | cut -d' ' -f1)
+echo "Using key: $KEY_ID"
+
+# Create a test file and encrypt it first
+echo "This is a test file" > test.txt
+gpg --encrypt --recipient $KEY_ID test.txt
+# This creates test.txt.gpg
+
+# Switch to interactive mode
+gpg --no-batch --decrypt test.txt.gpg
+# Should prompt for passphrase in terminal if not cached
+```
+
+### Batch Mode
+
+```bash
+# Switch to batch mode
+gpg --batch --decrypt test.txt.gpg
+# Will fail if passphrase needed and not cached
+```
+
+### Loopback Mode
+
+```bash
+# Switch to loopback mode
+gpg --pinentry-mode loopback --decrypt test.txt.gpg
+# Will prompt for passphrase in terminal
+```
+
+### Agent Mode
+
+```bash
+# Switch to agent mode (default in modern GPG)
+gpg --use-agent --decrypt test.txt.gpg
+# Should use configured pinentry program for passphrase
+```
+
+### Checking Current Mode Configuration
+
+To check your current configuration:
+
+```bash
+# Check gpg.conf for batch settings
+grep -E "batch|no-batch|pinentry-mode" ~/.gnupg/gpg.conf
+
+# Check agent configuration
+grep "pinentry-program" ~/.gnupg/gpg-agent.conf
+
+# Check if agent is running
+gpgconf --list-components | grep agent
+```
+
+The output from these commands will show your current configuration settings, which determine the default mode GPG will use when no explicit mode flags are provided.
+
 ## Conclusion
 
 Understanding GPG's different interaction modes is essential for troubleshooting issues with `pass` and related tools. By properly configuring your GPG setup with the right mode and pinentry program, you can ensure smooth operation across different environments and applications.
