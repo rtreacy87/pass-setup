@@ -116,6 +116,16 @@ make
 sudo make install
 ```
 
+The commands above install and build browserpass-native, which is the critical component that enables communication between your Windows browser and the Pass password store in WSL. First, we install Go and make, which are required to compile the application from source. Then we clone the official repository, configure the build environment, compile the application, and install it system-wide. This installation creates the necessary executable and configuration files that the browser extension will communicate with through our Windows-WSL bridge.
+
+Unlike Firefox, which has the simpler passff system, Chrome and Edge require browserpass-native because they use a different native messaging protocol. Browserpass consists of two parts: the native application (which we're installing here) that can access your password store and decrypt passwords using GPG, and the browser extension that provides the user interface. This separation is crucial for security - the extension itself cannot access your encrypted passwords directly, it must request them through the native application which handles all the sensitive operations.
+
+# Verify the installation was successful
+```bash
+which browserpass                # Should show /usr/bin/browserpass
+browserpass --version            # Should display version information
+```
+
 #### Step 2: Install the Browser Extension
 
 Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/browserpass-ce/naepdomgkenhinolocfifgehidddafch) to install the browserpass extension.
