@@ -494,7 +494,7 @@ In the next guide, we'll cover troubleshooting common issues that you might enco
 ## Navigation
 
 - [README](README.md) - Wiki Home
-- Previous: [GUI Clients and Browser Integration](11_GUI_Clients_and_Browser_Integration.md)
+- Previous: [WSL to Browser Integration](12_WSL_to_Browser_Integration.md)
 - Next: [Troubleshooting Guide](13_Troubleshooting_Guide.md)
 - Related:
   - [Security Best Practices](10_Security_Best_Practices.md) - For security considerations

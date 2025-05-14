@@ -855,3 +855,4 @@ In the next guide, we'll cover how to extend your password management system to 
   - [Setting Up GPG Keys on macOS](02_Setting_Up_GPG_Keys_on_macOS.md) - For GPG-related issues
   - [Synchronization Workflow Between Systems](09_Synchronization_Workflow_Between_Systems.md) - For synchronization issues
   - [Setting Up WSL Ubuntu for Pass](06_Setting_Up_WSL_Ubuntu_for_Pass.md) - For WSL-specific issues
+  - [WSL to Browser Integration](12_WSL_to_Browser_Integration.md) - For WSL-browser integration issues

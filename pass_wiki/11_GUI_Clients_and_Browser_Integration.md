@@ -449,6 +449,81 @@ For Chrome to work with WSL, you need to create a custom native messaging host m
 
 This configuration is complex and may require troubleshooting.
 
+#### Troubleshooting Browserpass WSL-to-Windows Chrome Communication
+
+If your browserpass Chrome extension shows "Loading available logins" indefinitely when using WSL, the issue is likely with the communication bridge between WSL and Windows Chrome:
+
+1. **Verify the WSL-Windows bridge is properly configured**:
+
+   The most common issue is that Chrome in Windows cannot communicate with browserpass in WSL. Follow these steps to fix it:
+
+   a. Create a Windows batch script to bridge between Chrome and WSL:
+
+   Create a file named `browserpass-wsl.bat` in a location like `C:\Users\YourUsername\bin\` with:
+   ```batch
+   @echo off
+   wsl ~/.local/bin/browserpass-native
+   ```
+
+   b. Create a native messaging host manifest for Chrome in Windows:
+
+   Create a file in `%LOCALAPPDATA%\Google\Chrome\User Data\NativeMessagingHosts\com.github.browserpass.native.json` with:
+   ```json
+   {
+     "name": "com.github.browserpass.native",
+     "description": "Browserpass native component for WSL",
+     "path": "C:\\Users\\YourUsername\\bin\\browserpass-wsl.bat",
+     "type": "stdio",
+     "allowed_origins": [
+       "chrome-extension://naepdomgkenhinolocfifgehidddafch/"
+     ]
+   }
+   ```
+
+   Make sure to replace `YourUsername` with your actual Windows username and verify the path to the batch file is correct.
+
+2. **Check the path to browserpass in WSL**:
+
+   The batch file assumes browserpass is installed at `~/.local/bin/browserpass-native`. Verify the actual location:
+   ```bash
+   which browserpass
+   ```
+
+   If it's in a different location, update the batch file accordingly:
+   ```batch
+   @echo off
+   wsl /usr/bin/browserpass
+   ```
+
+3. **Verify the Chrome extension ID**:
+
+   The `allowed_origins` in the manifest must match your installed extension ID. To check:
+   - Go to Chrome Extensions (chrome://extensions/)
+   - Enable Developer mode (toggle in top-right)
+   - Find the ID for Browserpass and ensure it matches the one in your manifest
+
+4. **Test the batch file manually**:
+
+   Open Command Prompt and run:
+   ```
+   C:\Users\YourUsername\bin\browserpass-wsl.bat
+   ```
+
+   You should see some output or an error message that can help diagnose the issue.
+
+5. **Check Windows permissions**:
+
+   Ensure the batch file and manifest have appropriate permissions:
+   ```
+   Right-click browserpass-wsl.bat → Properties → Security
+   ```
+
+   Make sure your user account has read and execute permissions.
+
+6. **Restart Chrome**:
+
+   After making these changes, completely close Chrome (check Task Manager to ensure all Chrome processes are terminated) and restart it.
+
 #### Usage
 
 With browserpass installed:
@@ -544,7 +619,7 @@ In the next guide, we'll explore advanced features and extensions to enhance you
 
 - [README](README.md) - Wiki Home
 - Previous: [Security Best Practices](10_Security_Best_Practices.md)
-- Next: [Advanced Features and Extensions](12_Advanced_Features_and_Extensions.md)
+- Next: [WSL to Browser Integration](12_WSL_to_Browser_Integration.md)
 - Related:
   - [Setting Up Pass on WSL Ubuntu](08_Setting_Up_Pass_on_WSL_Ubuntu.md) - For WSL integration
   - [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md) - For mobile setup

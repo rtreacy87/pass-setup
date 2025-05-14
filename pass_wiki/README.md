@@ -26,32 +26,33 @@ This wiki series provides comprehensive documentation for setting up and maintai
 ### Advanced Usage
 
 11. [GUI Clients and Browser Integration](11_GUI_Clients_and_Browser_Integration.md) - Optional graphical interfaces and browser extensions
-12. [Advanced Features and Extensions](12_Advanced_Features_and_Extensions.md) - Two-factor authentication, Git hooks, and more
+12. [WSL to Browser Integration](12_WSL_to_Browser_Integration.md) - Detailed guide for connecting Pass in WSL to Windows browsers
+13. [Advanced Features and Extensions](13_Advanced_Features_and_Extensions.md) - Two-factor authentication, Git hooks, and more
 
 ### Troubleshooting and Maintenance
 
-13. [Troubleshooting Guide](13_Troubleshooting_Guide.md) - Solving common issues with Pass, GPG, and Git
-14. [Extending to Additional Platforms](14_Extending_to_Additional_Platforms.md) - Adding more systems to your password ecosystem
-15. [Maintenance and Administration](15_Maintenance_and_Administration.md) - Long-term management of your password system
-16. [Real-Time Password Synchronization](16_Real_Time_Password_Synchronization.md) - Implementing immediate password updates across systems
+14. [Troubleshooting Guide](14_Troubleshooting_Guide.md) - Solving common issues with Pass, GPG, and Git
+15. [Extending to Additional Platforms](15_Extending_to_Additional_Platforms.md) - Adding more systems to your password ecosystem
+16. [Maintenance and Administration](16_Maintenance_and_Administration.md) - Long-term management of your password system
+17. [Real-Time Password Synchronization](17_Real_Time_Password_Synchronization.md) - Implementing immediate password updates across systems
 
 ### Advanced GPG Key Management
 
-16. [Understanding GPG Subkeys for Pass](gpg_subkeys/16_Understanding_GPG_Subkeys_for_Pass.md) - Introduction to using GPG subkeys for enhanced security
-17. [Creating and Managing GPG Subkeys](gpg_subkeys/17_Creating_and_Managing_GPG_Subkeys.md) - Setting up and maintaining GPG subkeys
-18. [Exporting GPG Subkeys for Other Devices](gpg_subkeys/18_Exporting_GPG_Subkeys_for_Other_Devices.md) - Securely transferring subkeys to secondary devices
-19. [Setting Up Pass with GPG Subkeys](gpg_subkeys/19_Setting_Up_Pass_with_GPG_Subkeys.md) - Configuring pass to work with subkeys
-20. [Subkey Rotation and Maintenance](gpg_subkeys/20_Subkey_Rotation_and_Maintenance.md) - Managing subkey lifecycle and rotation
-21. [Troubleshooting GPG Subkeys with Pass](gpg_subkeys/21_Troubleshooting_GPG_Subkeys_with_Pass.md) - Solving common issues with subkeys
-22. [Understanding GPG Modes](gpg_subkeys/22_Understanding_GPG_Modes.md) - Explaining GPG batch mode and other interaction methods
+18. [Understanding GPG Subkeys for Pass](gpg_subkeys/18_Understanding_GPG_Subkeys_for_Pass.md) - Introduction to using GPG subkeys for enhanced security
+19. [Creating and Managing GPG Subkeys](gpg_subkeys/19_Creating_and_Managing_GPG_Subkeys.md) - Setting up and maintaining GPG subkeys
+20. [Exporting GPG Subkeys for Other Devices](gpg_subkeys/20_Exporting_GPG_Subkeys_for_Other_Devices.md) - Securely transferring subkeys to secondary devices
+21. [Setting Up Pass with GPG Subkeys](gpg_subkeys/21_Setting_Up_Pass_with_GPG_Subkeys.md) - Configuring pass to work with subkeys
+22. [Subkey Rotation and Maintenance](gpg_subkeys/22_Subkey_Rotation_and_Maintenance.md) - Managing subkey lifecycle and rotation
+23. [Troubleshooting GPG Subkeys with Pass](gpg_subkeys/23_Troubleshooting_GPG_Subkeys_with_Pass.md) - Solving common issues with subkeys
+24. [Understanding GPG Modes](gpg_subkeys/24_Understanding_GPG_Modes.md) - Explaining GPG batch mode and other interaction methods
 
 ## How to Use This Wiki
 
 1. Start with the Introduction to understand the overall system
 2. Follow the guides in order for initial setup (articles 1-9)
 3. Refer to the Security Best Practices to ensure your system is secure
-4. Explore advanced topics as needed (articles 11-15)
-5. For enhanced security with GPG subkeys, follow the Advanced GPG Key Management series (articles 16-22)
+4. Explore advanced topics as needed (articles 11-17)
+5. For enhanced security with GPG subkeys, follow the Advanced GPG Key Management series (articles 18-24)
 6. Use the Troubleshooting Guide when you encounter issues
 
 ### Navigation Tips
@@ -59,8 +60,8 @@ This wiki series provides comprehensive documentation for setting up and maintai
 - Each wiki article contains navigation links at the bottom to move between related articles
 - You can always return to this README page as a central hub
 - Articles with prerequisites contain links to those prerequisite articles
-- The Troubleshooting Guide (13) is linked from relevant articles for quick reference
-- For Git-related issues, refer directly to article 4 (Git Integration) and article 13 (Troubleshooting)
+- The Troubleshooting Guide (14) is linked from relevant articles for quick reference
+- For Git-related issues, refer directly to article 4 (Git Integration) and article 14 (Troubleshooting)
 
 ## Features of This Documentation
 
